@@ -1,6 +1,6 @@
 # secure_app
 
-A new Flutter project.
+Calling a particular URL from the app, filter FLUTTER keywork in devoce logs.
 
 ## Getting Started
 
