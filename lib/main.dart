@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
+import 'package:flutter_system_proxy/flutter_system_proxy.dart';
 import 'package:logger/logger.dart';
 
 var logger = Logger();
@@ -40,11 +44,23 @@ class MyApp extends StatelessWidget {
 Future<void> checkUser() async {
   final String url = 'http://172.20.16.10:5000/SecureApp/check-user/54321';
   logger.i('Starting request to $url');
+
+  // Get the system proxy for the URL
+  var proxy = await FlutterSystemProxy.findProxyFromEnvironment(url);
+
+  // Initialize Dio with proxy settings
+  var dio = Dio();
+  (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+      (HttpClient client) {
+    client.findProxy = (uri) {
+      return proxy;
+    };
+  };
+
   try {
-    final response = await http.get(Uri.parse(url));
-    logger.d('Request completed');
+    var response = await dio.get(url);
     if (response.statusCode == 200) {
-      logger.i('Response: ${response.body}');
+      logger.i('Response: ${response.data}');
     } else {
       logger.w('Error: ${response.statusCode}');
     }
