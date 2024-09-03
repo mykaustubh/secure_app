@@ -32,9 +32,10 @@ dependencies:
     sdk: flutter
   http: ^0.13.3 # Add this line for HTTP requests
   logger: ^1.0.0
+  flutter_svg: ^1.0.0
   flutter_system_proxy:
     git:
-      url: https://github.com/LambdaTest/flutter_system_proxy.git
+      url: https://github.com/lambdatest/flutter_system_proxy.git
       ref: main # You can specify a branch, tag, or commit hash if needed
 
   # The following adds the Cupertino Icons font to your application.

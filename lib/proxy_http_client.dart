@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_system_proxy/flutter_system_proxy.dart';
 import 'package:logger/logger.dart';
@@ -15,7 +16,7 @@ class ProxyHttpClient {
         )),
         _logger = Logger();
 
-  Future<void> get(String url) async {
+  Future<Uint8List?> get(String url) async {
     _logger.i('Starting request to $url');
 
     // Get the system proxy for the URL
@@ -31,9 +32,13 @@ class ProxyHttpClient {
     };
 
     try {
-      var response = await _dio.get(url);
+      var response = await _dio.get<Uint8List>(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+      );
       if (response.statusCode == 200) {
-        _logger.i('Response: ${response.data}');
+        _logger.i('Response received successfully');
+        return response.data;
       } else {
         _logger.w('Error: ${response.statusCode}');
       }
@@ -47,5 +52,6 @@ class ProxyHttpClient {
       _logger.e('Exception: $e');
       _logger.e('Stack trace: $stacktrace');
     }
+    return null;
   }
 }
